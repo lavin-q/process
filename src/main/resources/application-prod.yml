@@ -1,0 +1,16 @@
+#database connection
+spring:
+  datasource:
+    druid:
+      url: jdbc:mysql://222.83.247.156:13306/video?useUnicode=true&characeterEncoding=utf-8&useSSL=false
+      username: root
+      password: 123456
+      driver-class-name: com.mysql.jdbc.Driver
+  servlet:
+    multipart:
+      location: /usr/local/video
+
+#video update path
+video:
+  path: /usr/local/video/
+  resource: file:/usr/local/video/

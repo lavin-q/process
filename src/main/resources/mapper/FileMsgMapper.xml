@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.vd.video.process.mapper.FileMsgMapper" >
+  <resultMap id="BaseResultMap" type="com.vd.video.process.entity.FileMsg" >
+    <id column="file_id" property="fileId" jdbcType="BIGINT" />
+    <result column="file_group_name" property="fileGroupName" jdbcType="VARCHAR" />
+    <result column="file_type" property="fileType" jdbcType="INTEGER" />
+    <result column="file_cover_path" property="fileCoverPath" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    file_id, file_group_name, file_type, file_cover_path
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select
+    <include refid="Base_Column_List" />
+    from file_msg
+    where file_id = #{fileId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from file_msg
+    where file_id = #{fileId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.vd.video.process.entity.FileMsg" >
+    insert into file_msg (file_id, file_group_name, file_type,
+                          file_cover_path)
+    values (#{fileId,jdbcType=BIGINT}, #{fileGroupName,jdbcType=VARCHAR}, #{fileType,jdbcType=INTEGER},
+            #{fileCoverPath,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.vd.video.process.entity.FileMsg" useGeneratedKeys="true" keyProperty="fileId">
+    insert into file_msg
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="fileId != null" >
+        file_id,
+      </if>
+      <if test="fileGroupName != null" >
+        file_group_name,
+      </if>
+      <if test="fileType != null" >
+        file_type,
+      </if>
+      <if test="fileCoverPath != null" >
+        file_cover_path,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="fileId != null" >
+        #{fileId,jdbcType=BIGINT},
+      </if>
+      <if test="fileGroupName != null" >
+        #{fileGroupName,jdbcType=VARCHAR},
+      </if>
+      <if test="fileType != null" >
+        #{fileType,jdbcType=INTEGER},
+      </if>
+      <if test="fileCoverPath != null" >
+        #{fileCoverPath,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.vd.video.process.entity.FileMsg" >
+    update file_msg
+    <set >
+      <if test="fileGroupName != null" >
+        file_group_name = #{fileGroupName,jdbcType=VARCHAR},
+      </if>
+      <if test="fileType != null" >
+        file_type = #{fileType,jdbcType=INTEGER},
+      </if>
+      <if test="fileCoverPath != null" >
+        file_cover_path = #{fileCoverPath,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where file_id = #{fileId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.vd.video.process.entity.FileMsg" >
+    update file_msg
+    set file_group_name = #{fileGroupName,jdbcType=VARCHAR},
+        file_type = #{fileType,jdbcType=INTEGER},
+        file_cover_path = #{fileCoverPath,jdbcType=VARCHAR}
+    where file_id = #{fileId,jdbcType=BIGINT}
+  </update>
+
+  <select id="selectByName" parameterType="string" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from file_msg
+    where file_group_name = #{name}
+    order by file_id desc
+  </select>
+
+  <select id="getFileByName" parameterType="string" resultType="com.vd.video.process.vo.FileVo">
+    select f.file_id as fileId,f.file_group_name as fileName,
+           f.file_type as fileType,f.file_cover_path as fileCoverPath,
+           v.video_id as videoId,v.video_name as videoName,
+           v.video_path as videoPath
+    from file_msg f
+    inner join video_msg v on f.file_id = v.file_id
+    where f.file_group_name like concat('%',#{name},'%')
+    order by f.file_id desc,v.video_id asc
+  </select>
+
+  <select id="getFileById" parameterType="long" resultType="com.vd.video.process.vo.FileVo">
+    select f.file_id as fileId,f.file_group_name as fileName,
+           f.file_type as fileType,f.file_cover_path as fileCoverPath,
+           v.video_id as videoId,v.video_name as videoName,
+           v.video_path as videoPath
+    from file_msg f
+    inner join video_msg v on f.file_id = v.file_id
+    where f.file_id = #{fileId}
+    order by f.file_id desc,v.video_id asc
+  </select>
+
+  <select id="selectAll"  resultType="com.vd.video.process.vo.FileVo">
+    select f.file_id as fileId,f.file_group_name as fileName,
+           f.file_type as fileType,f.file_cover_path as fileCoverPath,
+           v.video_id as videoId,v.video_name as videoName,
+           v.video_path as videoPath
+    from file_msg f
+    inner join video_msg v on f.file_id = v.file_id
+    order by f.file_id desc,v.video_id asc
+  </select>
+
+  <select id="selectByFileType"  resultType="com.vd.video.process.vo.FileVo">
+    select f.file_id as fileId,f.file_group_name as fileName,
+           f.file_type as fileType,f.file_cover_path as fileCoverPath,
+           v.video_id as videoId,v.video_name as videoName,
+           v.video_path as videoPath
+    from file_msg f
+    inner join video_msg v on f.file_id = v.file_id
+    where f.file_type = #{fileType}
+    order by f.file_id desc,v.video_id asc
+  </select>
+</mapper>
